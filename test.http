@@ -1,0 +1,14 @@
+#Test the api
+### Mark Attendance
+
+POST http://localhost:5555/api/attendance-logs
+Content-Type: application/json
+
+{
+  "employeeId": 1,
+  "date": "2025-07-20",
+  "sessionId": 1,
+  "actualClockIn": "2025-07-20T08:00:00Z",
+  "actualClockOut": "2025-07-20T12:00:00Z",
+  "status": "present"
+}
