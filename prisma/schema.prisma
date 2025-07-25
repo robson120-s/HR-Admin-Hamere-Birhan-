@@ -118,7 +118,7 @@ model User {
 model UserRole {
   userId Int
   roleId Int
-
+  
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
 
@@ -285,9 +285,7 @@ model AttendanceSummary {
   remarks          String?
 
   employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-  department     Department @relation(fields: [department_id], references: [id])
-  
-
+  departmentId Int?
 
   @@unique([employeeId, date])
 }

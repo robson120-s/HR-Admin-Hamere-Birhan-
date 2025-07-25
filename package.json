@@ -19,6 +19,7 @@
   "homepage": "https://github.com/robson120-s/HR-Admin-Hamere-Birhan-#readme",
   "dependencies": {
     "@prisma/client": "^6.12.0",
+    "copilot": "^0.5.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0"
