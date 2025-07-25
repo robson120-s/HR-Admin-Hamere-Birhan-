@@ -1,14 +1,79 @@
 #Test the api
 ### Mark Attendance
 
-POST http://localhost:5555/api/attendance-logs
-Content-Type: application/json
+# POST http://localhost:5555/api/attendance-logs
+# Content-Type: application/json
 
-{
-  "employeeId": 1,
-  "date": "2025-07-20",
-  "sessionId": 1,
-  "actualClockIn": "2025-07-20T08:00:00Z",
-  "actualClockOut": "2025-07-20T12:00:00Z",
-  "status": "present"
-}
+# {
+#   "employeeId": 1,
+#   "date": "2025-07-22",
+#   "sessionId": 1,
+#   "actualClockIn": "2025-07-20T08:00:00Z",
+#   "actualClockOut": "2025-07-20T12:00:00Z",
+#   "status": "present"
+# }
+
+# ## Get Attendance Summaries by Department(For HR)
+# GET http://localhost:5555/api/attendance-summaries?departmentId=1&date=2025-07-20
+# Content-Type: application/json
+
+### Testing the API for approving attendance summaries
+### *** Approve Attendance Summaries
+# PATCH http://localhost:5555/api/attendance-summaries/approve
+# Content-Type: application/json
+# {
+#   "summaryIds": [1, 2]
+# }
+
+# ## Reject Attendance Summaries
+# POST http://localhost:5555/api/attendance
+# Content-Type: application/json
+
+# {
+#   "employeeId": 3,
+#   "departmentId": 2,
+#   "date": "2025-07-22",
+#   "sessionId": 1,
+#   "actualClockIn": "2025-07-22T08:00:00.000Z",
+#   "actualClockOut": "2025-07-22T12:00:00.000Z",
+#   "status": "Present"
+# }
+
+# ## Get Attendance Logs by Employee
+# GET http://localhost:5555/api/attendance-logs/employees/1
+
+# ## Get Attendance Logs by Employee# POST http://localhost:5555/api/attendance-logs/bulk
+# Content-Type: application/json
+
+# {
+#   "logs": [ 
+#     {
+#       "employeeId": 1,
+#       "date": "2025-07-23",
+#       "sessionId": 1,
+#       "actualClockIn": "2025-07-23T08:05:00",
+#       "actualClockOut": "2025-07-23T12:00:00",
+#       "status": "present"
+#     },
+#     {
+#       "employeeId": 4,
+#       "date": "2025-07-23",
+#       "sessionId": 1,
+#       "actualClockIn": null,
+#       "actualClockOut": null,
+#       "status": "absent"
+#     }
+#   ]
+# }
+
+# ## Generate Attendance Summary
+# POST http://localhost:5555/api/attendance-summaries/generate
+# Content-Type: application/json
+
+# {
+#   "date": "2025-07-23",
+#   "departmentId": 2
+# }
+
+
+PATCH http://localhost:5555/api/attendance-summaries/approve/1
