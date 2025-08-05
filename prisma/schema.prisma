@@ -1,0 +1,405 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ----------------------
+// 1. ENUMS
+// ----------------------
+enum Sex {
+  male
+  female
+  other
+}
+
+enum LeaveType {
+  annual
+  sick
+  unpaid
+  maternity
+  other
+}
+
+enum LeaveStatus {
+  pending
+  approved
+  rejected
+}
+
+enum AttendanceStatus {
+  present
+  late
+  absent
+  permission
+}
+
+enum SummaryStatus {
+  present
+  absent
+  half_day
+  on_leave
+  holiday
+  weekend
+}
+
+enum ComplaintStatus {
+  open
+  in_review
+  resolved
+  rejected
+}
+
+enum InterviewResult {
+  pending
+  selected
+  rejected
+}
+
+enum OvertimeApprovalStatus {
+  pending
+  approved
+  rejected
+}
+
+enum CompensationMethod {
+  cash
+  time_off
+}
+
+enum SalaryStatus {
+  paid
+  unpaid
+  pending
+}
+
+enum TerminationStatus {
+  voluntary
+  involuntary
+  retired
+}
+
+// ----------------------
+// 2. ROLES & USERS
+// ----------------------
+model Role {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  users       UserRole[]
+}
+
+model User {
+  id                Int           @id @default(autoincrement())
+  username          String        @unique
+  email             String        @unique
+  password          String
+  isActive          Boolean       @default(true)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  roles             UserRole[]
+  employees         Employee[]
+  approvedLeaves    Leave[]       @relation("ApprovedLeaves")
+  approvedOvertimes OvertimeLog[] @relation("ApprovedOvertimes")
+}
+
+model UserRole {
+  userId Int
+  roleId Int
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+}
+
+// ----------------------
+// 3. ORGANIZATIONAL STRUCTURE
+// ----------------------
+model Department {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  employees   Employee[]
+}
+
+model Position {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  employees   Employee[]
+}
+
+model MaritalStatus {
+  id        Int        @id @default(autoincrement())
+  status    String     @unique
+  employees Employee[]
+}
+
+model EmploymentType {
+  id        Int        @id @default(autoincrement())
+  type      String     @unique
+  employees Employee[]
+}
+
+model JobStatus {
+  id        Int        @id @default(autoincrement())
+  status    String     @unique
+  employees Employee[]
+}
+
+model AgreementStatus {
+  id        Int        @id @default(autoincrement())
+  status    String     @unique
+  employees Employee[]
+}
+
+// ----------------------
+// 4. EMPLOYEES
+// ----------------------
+model Employee {
+  id                     Int       @id @default(autoincrement())
+  userId                 Int?
+  firstName              String
+  lastName               String
+  baptismalName          String?
+  dateOfBirth            DateTime?
+  sex                    Sex
+  nationality            String?
+  maritalStatusId        Int?
+  departmentId           Int?
+  positionId             Int?
+  employmentTypeId       Int?
+  employmentDate         DateTime?
+  jobStatusId            Int?
+  phone                  String?
+  address                String?
+  subCity                String?
+  emergencyContactName   String?
+  emergencyContactPhone  String?
+  repentanceFatherName   String?
+  repentanceFatherChurch String?
+  repentanceFatherPhone  String?
+  academicQualification  String?
+  educationalInstitution String?
+  salary                 Decimal   @default(0.00)
+  bonusSalary            Decimal   @default(0.00)
+  accountNumber          String?
+  agreementStatusId      Int?
+  photo                  String?
+  deletedAt              DateTime?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  user                User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  department          Department?         @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  position            Position?           @relation(fields: [positionId], references: [id], onDelete: SetNull)
+  maritalStatus       MaritalStatus?      @relation(fields: [maritalStatusId], references: [id])
+  employmentType      EmploymentType?     @relation(fields: [employmentTypeId], references: [id])
+  jobStatus           JobStatus?          @relation(fields: [jobStatusId], references: [id])
+  agreementStatus     AgreementStatus?    @relation(fields: [agreementStatusId], references: [id])
+  shifts              EmployeeShift[]
+  attendanceLogs      AttendanceLog[]
+  attendanceSummaries AttendanceSummary[]
+  leaves              Leave[]
+  complaints          Complaint[]
+  performanceReviews  PerformanceReview[]
+  terminations        Termination[]
+  salaries            Salary[]
+  overtimes           OvertimeLog[]
+}
+
+// ---------------------
+// 5. SHIFTS & ATTENDANCE
+// ----------------------
+model Shift {
+  id          Int             @id @default(autoincrement())
+  name        String
+  startTime   DateTime
+  endTime     DateTime
+  isFlexible  Boolean         @default(false)
+  description String?
+  assignments EmployeeShift[]
+}
+
+model EmployeeShift {
+  id            Int       @id @default(autoincrement())
+  employeeId    Int
+  shiftId       Int
+  effectiveFrom DateTime
+  effectiveTo   DateTime?
+
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  shift    Shift    @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+}
+
+model SessionDefinition {
+  id               Int             @id @default(autoincrement())
+  sessionNumber    Int             @unique
+  expectedClockIn  DateTime
+  expectedClockOut DateTime
+  logs             AttendanceLog[]
+}
+
+model AttendanceLog {
+  id             Int              @id @default(autoincrement())
+  employeeId     Int
+  date           DateTime
+  sessionId      Int
+  actualClockIn  DateTime?
+  actualClockOut DateTime?
+  status         AttendanceStatus
+  createdAt      DateTime         @default(now())
+
+  employee Employee          @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  session  SessionDefinition @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@unique([employeeId, date, sessionId])
+}
+
+model AttendanceSummary {
+  id               Int           @id @default(autoincrement())
+  employeeId       Int
+  date             DateTime
+  status           SummaryStatus
+  lateArrival      Boolean       @default(false)
+  earlyDeparture   Boolean       @default(false)
+  unplannedAbsence Boolean       @default(false)
+  totalWorkHours   Decimal?
+  remarks          String?
+
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  departmentId Int?
+
+  @@unique([employeeId, date])
+}
+
+// ----------------------
+// 6. LEAVES & HOLIDAYS
+// ----------------------
+model Leave {
+  id          Int         @id @default(autoincrement())
+  employeeId  Int
+  leaveType   LeaveType
+  startDate   DateTime
+  endDate     DateTime
+  status      LeaveStatus @default(pending)
+  reason      String?
+  approvedBy  Int?
+  requestedAt DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  approver User?    @relation("ApprovedLeaves", fields: [approvedBy], references: [id], onDelete: SetNull)
+}
+
+model Holiday {
+  id          Int      @id @default(autoincrement())
+  name        String
+  date        DateTime @unique
+  isPublic    Boolean  @default(true)
+  description String?
+}
+
+// ----------------------
+// 7. OVERTIME & SALARY
+// ----------------------
+model OvertimeLog {
+  id                 Int                    @id @default(autoincrement())
+  employeeId         Int
+  date               DateTime
+  hours              Decimal
+  reason             String?
+  approvedBy         Int?
+  approvalStatus     OvertimeApprovalStatus @default(pending)
+  compensationMethod CompensationMethod     @default(cash)
+
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  approver User?    @relation("ApprovedOvertimes", fields: [approvedBy], references: [id], onDelete: SetNull)
+}
+
+model Salary {
+  id            Int          @id @default(autoincrement())
+  employeeId    Int
+  salaryMonth   DateTime
+  amount        Decimal
+  status        SalaryStatus @default(pending)
+  overtimeHours Decimal      @default(0.00)
+  overtimePay   Decimal      @default(0.00)
+  paidAt        DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([employeeId, salaryMonth])
+}
+
+// ----------------------
+// 8. HR MODULES
+// ----------------------
+model Complaint {
+  id          Int             @id @default(autoincrement())
+  employeeId  Int
+  subject     String
+  description String
+  status      ComplaintStatus @default(open)
+  response    String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+model Interview {
+  id            Int             @id @default(autoincrement())
+  candidateName String
+  position      String?
+  interviewDate DateTime?
+  result        InterviewResult @default(pending)
+  comments      String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model PerformanceReview {
+  id           Int      @id @default(autoincrement())
+  employeeId   Int
+  reviewDate   DateTime
+  reviewerName String?
+  score        Int?
+  comments     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+model Termination {
+  id              Int               @id @default(autoincrement())
+  employeeId      Int
+  terminationDate DateTime
+  reason          String?
+  status          TerminationStatus
+  remarks         String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}

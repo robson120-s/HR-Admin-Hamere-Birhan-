@@ -1,0 +1,51 @@
+```
+└── 📁HR admin backend        
+    └── 📁app
+        └── 📁auth
+        └── 📁generated
+            └── 📁prisma
+                └── 📁runtime
+                    ├── edge-esm.js
+                    ├── edge.js
+                    ├── index-browser.d.ts
+                    ├── index-browser.js
+                    ├── library.d.ts
+                    ├── library.js
+                    ├── react-native.js
+                    ├── wasm-compiler-edge.js
+                    ├── wasm-engine-edge.js
+                ├── client.d.ts
+                ├── client.js
+                ├── default.d.ts
+                ├── default.js
+                ├── edge.d.ts
+                ├── edge.js
+                ├── index-browser.js
+                ├── index.d.ts
+                ├── index.js
+                ├── package.json
+                ├── query_engine-windows.dll.node
+                ├── schema.prisma
+                ├── wasm.d.ts
+                ├── wasm.js
+        └── 📁middlewares
+        └── 📁routes
+            ├── attendance.routes.js
+            ├── user.routes.js
+    └── 📁prisma
+        └── 📁migrations
+            └── 📁20250721161619_startup
+                ├── migration.sql
+            ├── migration_lock.toml
+        ├── schema.prisma
+    ├── .env
+    ├── .gitignore
+    ├── app.js
+    ├── hrms_mysql_schema (2) (2).sql
+    ├── package-lock.json
+    ├── package.json
+    ├── README.md
+    ├── server.js
+    ├── test.http
+    └── test.sql
+```
