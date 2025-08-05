@@ -20,6 +20,7 @@ const authorizeRoles = (...allowedRoles) => {
         },
       });
 
+      
       const userRoles = userWithRoles?.roles.map((ur) => ur.role.name) || [];
 
       const isAuthorized = allowedRoles.some((role) => userRoles.includes(role));

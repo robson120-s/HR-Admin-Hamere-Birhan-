@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('../generated/prisma');
 const prisma = new PrismaClient();
 
+
 // Authentication middleware to verify JWT and extract user info
 const authenticate = async (req, res, next) => {
   const authHeader = req.headers.authorization;

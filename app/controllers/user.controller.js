@@ -2,7 +2,6 @@ const { PrismaClient } = require('../generated/prisma');
 const bcrypt = require('bcrypt');
 const prisma = new PrismaClient();
 
-
 exports.registerEmployee = async (req, res) => {
   try {
     const {

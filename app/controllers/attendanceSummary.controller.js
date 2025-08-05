@@ -71,6 +71,7 @@ exports.generateSummaries = async (req, res) => {
   }
 };
 
+
 // Get summaries by department and date
 exports.getSummariesByDepartment = async (req, res) => {
   const { departmentId, date } = req.query;

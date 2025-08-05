@@ -14,6 +14,7 @@ router.get('/dashboard', authenticate, async (req, res) => {
     const employee = await prisma.employee.findFirst({
       where: { userId },
     });
+    
 
     if (!employee) {
       return res.status(404).json({ error: 'Employee not found.' });
