@@ -1,0 +1,132 @@
+#Test the api
+### Mark Attendance
+
+# POST http://localhost:5555/api/attendance-logs
+# Content-Type: application/json
+
+# {
+#   "employeeId": 1,
+#   "date": "2025-07-22",
+#   "sessionId": 1,
+#   "actualClockIn": "2025-07-20T08:00:00Z",
+#   "actualClockOut": "2025-07-20T12:00:00Z",
+#   "status": "present"
+# }
+
+# ## Get Attendance Summaries by Department(For HR)
+# GET http://localhost:5555/api/attendance-summaries?departmentId=1&date=2025-07-20
+# Content-Type: application/json
+
+### Testing the API for approving attendance summaries
+### *** Approve Attendance Summaries
+# PATCH http://localhost:5555/api/attendance-summaries/approve
+# Content-Type: application/json
+# {
+#   "summaryIds": [1, 2]
+# }
+
+# ## Reject Attendance Summaries
+# POST http://localhost:5555/api/attendance
+# Content-Type: application/json
+
+# {
+#   "employeeId": 3,
+#   "departmentId": 2,
+#   "date": "2025-07-22",
+#   "sessionId": 1,
+#   "actualClockIn": "2025-07-22T08:00:00.000Z",
+#   "actualClockOut": "2025-07-22T12:00:00.000Z",
+#   "status": "Present"
+# }
+
+# ## Get Attendance Logs by Employee
+# GET http://localhost:5555/api/attendance-logs/employees/1
+
+# ## Get Attendance Logs by Employee# POST http://localhost:5555/api/attendance-logs/bulk
+# Content-Type: application/json
+
+# {
+#   "logs": [ 
+#     {
+#       "employeeId": 1,
+#       "date": "2025-07-23",
+#       "sessionId": 1,
+#       "actualClockIn": "2025-07-23T08:05:00",
+#       "actualClockOut": "2025-07-23T12:00:00",
+#       "status": "present"
+#     },
+#     {
+#       "employeeId": 4,
+#       "date": "2025-07-23",
+#       "sessionId": 1,
+#       "actualClockIn": null,
+#       "actualClockOut": null,
+#       "status": "absent"
+#     }
+#   ]
+# }
+
+# ## Generate Attendance Summary
+# POST http://localhost:5555/api/attendance-summaries/generate
+# Content-Type: application/json
+
+# {
+#   "date": "2025-07-23",
+#   "departmentId": 2
+# }
+
+// ## Approve Bulk Attendance Summaries
+# PATCH http://localhost:5555/api/attendance-summaries/approve/1
+
+
+### Approve Summaries (Authorized for HR only)
+# PATCH http://localhost:5555/api/attendance-summaries/approve-bulk
+# Authorization: Bearer {}
+# Content-Type: application/json
+
+# {
+#   "date": "2025-07-20",
+#   "departmentId": 2
+# }
+
+
+# ## Login (get token)
+# POST http://localhost:5555/api/auth/login
+# Content-Type: application/json
+
+# {
+#   "username": "abebe",
+#   "password": "1234567890"
+# }
+# ### Get Staff Dashboard Data
+# GET http://localhost:5555/api/staff/profile
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiaWF0IjoxNzU0MzQ0MjgxLCJleHAiOjE3NTQ0MzA2ODF9._F2w7ZCAaIKINxCdWWdPCGAOEY5N4sTIYT0lLspWpwk
+# POST http://localhost:5555/api/users/register
+# Content-Type: application/json
+
+# {
+#   "username": "abebe",
+#   "email": "abebe@example.com",
+#   "password": "1234567890",
+#   "roleId": 3,
+#   "employeeData": {
+#     "firstName": "Abebe",
+#     "lastName": "Kebede",
+#     "sex": "male",
+#     "departmentId": 1,
+#     "positionId": 1,
+#     "employmentTypeId": 1,
+#     "jobStatusId": 1,
+#     "agreementStatusId": 1,
+#     "salary": 6000.00,
+#     "phone": "0912345678"
+#   }
+# }
+
+# GET http://localhost:5555/api/staff/dashboard
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImlhdCI6MTc1NDM5OTMzMywiZXhwIjoxNzU0NDg1NzMzfQ.bwM4BCoDRK-o1NfNdmBYTG--PmzoV7y5Gs_lax0OHZ8
+# GET http://localhost:5555/api/staff/attendance-history
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImlhdCI6MTc1NDM5OTMzMywiZXhwIjoxNzU0NDg1NzMzfQ.bwM4BCoDRK-o1NfNdmBYTG--PmzoV7y5Gs_lax0OHZ8
+# GET http://localhost:5555/api/staff/profile
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImlhdCI6MTc1NDM5OTMzMywiZXhwIjoxNzU0NDg1NzMzfQ.bwM4BCoDRK-o1NfNdmBYTG--PmzoV7y5Gs_lax0OHZ8
+

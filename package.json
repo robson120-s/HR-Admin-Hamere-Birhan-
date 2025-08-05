@@ -1,0 +1,32 @@
+{
+  "name": "hr-admin-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robson120-s/HR-Admin-Hamere-Birhan-.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/robson120-s/HR-Admin-Hamere-Birhan-/issues"
+  },
+  "homepage": "https://github.com/robson120-s/HR-Admin-Hamere-Birhan-#readme",
+  "dependencies": {
+    "@prisma/client": "^6.12.0",
+    "bcrypt": "^6.0.0",
+    "copilot": "^0.5.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "prisma": "^6.12.0"
+  }
+}
