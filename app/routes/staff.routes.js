@@ -163,6 +163,44 @@ router.get('/profile', authenticate, async (req, res) => {
   }
 });
 
+//post /api/staff/complaints
+router.post("/complaints", authenticate, async (req,res)=>{
+    const userId = req.user.id;
+  const { subject, description } = req.body;
+
+  if (!subject || !description) {
+    return res.status(400).json({ error: "Subject and description are required." });
+  }
+
+  try {
+    // Find employee record linked to this staff user
+    const employee = await prisma.employee.findFirst({
+      where: { userId: userId },
+    });
+
+    if (!employee) {
+      return res.status(404).json({ error: "Employee not found." });
+    }
+
+    // Create the complaint
+    const complaint = await prisma.complaint.create({
+      data: {
+        employeeId: employee.id,
+        subject,
+        description,
+        status: "open", // default status
+      },
+    });
+
+    return res.status(201).json({
+      message: "Complaint submitted successfully.",
+      data: complaint,
+    });
+  } catch (error) {
+    console.error("Submit complaint error:", error);
+    return res.status(500).json({ error: "Internal server error." });
+  }
+});
 
 // PATCH /api/employee/change-password
 router.patch('/change-password', authenticate, async (req, res) => {

@@ -30,6 +30,64 @@ router.get('/employees/:departmentId', async (req, res) => {
   }
 });
 
+// GET /api/attendance/employees-scheduled?date=2025-08-04&departmentId=3
+router.get('/employees-scheduled', authenticate, authorize('DepartmentHead'), async (req, res) => {
+  const { date, departmentId } = req.query;
+
+  if (!date || !departmentId) {
+    return res.status(400).json({ error: "date and departmentId are required." });
+  }
+
+  const parsedDate = new Date(date);
+  const dayOfWeek = parsedDate.getUTCDay(); // 0 = Sunday
+
+  try {
+    // 1. Check if it's a holiday
+    const isHoliday = await prisma.holiday.findFirst({
+      where: { date: parsedDate },
+    });
+
+    if (isHoliday) {
+      return res.status(200).json({ message: "Holiday - No employees scheduled.", data: [] });
+    }
+
+    // 2. Skip weekend
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
+      return res.status(200).json({ message: "Weekend - No employees scheduled.", data: [] });
+    }
+
+    // 3. Fetch employees with active shift that day
+    const employees = await prisma.employee.findMany({
+      where: {
+        departmentId: parseInt(departmentId),
+        shifts: {
+          some: {
+            effectiveFrom: { lte: parsedDate },
+            OR: [
+              { effectiveTo: null },
+              { effectiveTo: { gte: parsedDate } },
+            ],
+          },
+        },
+      },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        position: {
+          select: { name: true },
+        },
+      },
+    });
+
+    res.status(200).json({ message: "Scheduled employees fetched.", data: employees });
+  } catch (error) {
+    console.error("Error fetching scheduled employees:", error);
+    res.status(500).json({ error: "Failed to fetch scheduled employees." });
+  }
+});
+
+
 // POST /api/attendance-logs (create attendance log) (Dep Head)
 router.post("/", authenticate, authorize('DepartmentHead') ,async (req, res) => {
   const {
@@ -101,7 +159,7 @@ router.post('/bulk', authenticate, authorize('DepartmentHead'), async (req, res)
           sessionId: log.sessionId,
           actualClockIn: log.actualClockIn ? new Date(log.actualClockIn) : null,
           actualClockOut: log.actualClockOut ? new Date(log.actualClockOut) : null,
-          status: log.status
+          status: log.status,
         }
       });
       results.push({ success: true, log: created });
@@ -113,8 +171,4 @@ router.post('/bulk', authenticate, authorize('DepartmentHead'), async (req, res)
 });
 
 
-
-
-
 module.exports = router;
-
