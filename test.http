@@ -75,5 +75,58 @@
 #   "departmentId": 2
 # }
 
+// ## Approve Bulk Attendance Summaries
+# PATCH http://localhost:5555/api/attendance-summaries/approve/1
 
-PATCH http://localhost:5555/api/attendance-summaries/approve/1
+
+### Approve Summaries (Authorized for HR only)
+# PATCH http://localhost:5555/api/attendance-summaries/approve-bulk
+# Authorization: Bearer {}
+# Content-Type: application/json
+
+# {
+#   "date": "2025-07-20",
+#   "departmentId": 2
+# }
+
+
+# ## Login (get token)
+# POST http://localhost:5555/api/auth/login
+# Content-Type: application/json
+
+# {
+#   "username": "abebe",
+#   "password": "1234567890"
+# }
+# ### Get Staff Dashboard Data
+# GET http://localhost:5555/api/staff/profile
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiaWF0IjoxNzU0MzQ0MjgxLCJleHAiOjE3NTQ0MzA2ODF9._F2w7ZCAaIKINxCdWWdPCGAOEY5N4sTIYT0lLspWpwk
+# POST http://localhost:5555/api/users/register
+# Content-Type: application/json
+
+# {
+#   "username": "abebe",
+#   "email": "abebe@example.com",
+#   "password": "1234567890",
+#   "roleId": 3,
+#   "employeeData": {
+#     "firstName": "Abebe",
+#     "lastName": "Kebede",
+#     "sex": "male",
+#     "departmentId": 1,
+#     "positionId": 1,
+#     "employmentTypeId": 1,
+#     "jobStatusId": 1,
+#     "agreementStatusId": 1,
+#     "salary": 6000.00,
+#     "phone": "0912345678"
+#   }
+# }
+
+# GET http://localhost:5555/api/staff/dashboard
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImlhdCI6MTc1NDM5OTMzMywiZXhwIjoxNzU0NDg1NzMzfQ.bwM4BCoDRK-o1NfNdmBYTG--PmzoV7y5Gs_lax0OHZ8
+# GET http://localhost:5555/api/staff/attendance-history
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImlhdCI6MTc1NDM5OTMzMywiZXhwIjoxNzU0NDg1NzMzfQ.bwM4BCoDRK-o1NfNdmBYTG--PmzoV7y5Gs_lax0OHZ8
+# GET http://localhost:5555/api/staff/profile
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImlhdCI6MTc1NDM5OTMzMywiZXhwIjoxNzU0NDg1NzMzfQ.bwM4BCoDRK-o1NfNdmBYTG--PmzoV7y5Gs_lax0OHZ8
+

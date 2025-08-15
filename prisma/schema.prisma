@@ -403,3 +403,5 @@ model Termination {
 
   employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 }
+
+
