@@ -90,14 +90,7 @@
 # }
 
 
-# ## Login (get token)
-# POST http://localhost:5555/api/auth/login
-# Content-Type: application/json
 
-# {
-#   "username": "abebe",
-#   "password": "1234567890"
-# }
 # ### Get Staff Dashboard Data
 # GET http://localhost:5555/api/staff/profile
 # Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiaWF0IjoxNzU0MzQ0MjgxLCJleHAiOjE3NTQ0MzA2ODF9._F2w7ZCAaIKINxCdWWdPCGAOEY5N4sTIYT0lLspWpwk
@@ -130,3 +123,11 @@
 # GET http://localhost:5555/api/staff/profile
 # Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImlhdCI6MTc1NDM5OTMzMywiZXhwIjoxNzU0NDg1NzMzfQ.bwM4BCoDRK-o1NfNdmBYTG--PmzoV7y5Gs_lax0OHZ8
 
+# ## Login (get token)
+# POST http://localhost:5555/api/auth/login
+# Content-Type: application/json
+
+# {
+#   "username": "abebe",
+#   "password": "1234567890"
+# }
